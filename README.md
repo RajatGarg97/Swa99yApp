@@ -1,4 +1,4 @@
-PythonTrackerApp
+Swa99yApp
 ----------------
 
 This is a Python script that tracks the price of your favorite product on any E-commerce website.
