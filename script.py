@@ -2,8 +2,10 @@
 import requests
 from bs4 import BeautifulSoup
 import smtplib
+import time
 
-def priceChecker(url, headers):
+
+def priceChecker(url, headers, quotedPrice, emailid):
 
     page = requests.get(url, headers=headers)
 
@@ -13,13 +15,11 @@ def priceChecker(url, headers):
     price = soup.find(id="priceblock_ourprice").get_text()
     priceToString = float(price[0:5])
 
-    quotedPrice = float(input("Enter Quoted Price: "))
-
     if priceToString <= quotedPrice:
-        mailer()
+        mailer(emailid)
 
 
-def mailer():
+def mailer(emailid):
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
@@ -27,35 +27,42 @@ def mailer():
     server.ehlo()
 
     # Enter the password here recieved after two step verification
-    server.login('swa99yapp@gmail.com', '') 
+    server.login('swa99yapp@gmail.com', '')
 
     subject = 'Prices Slashed!!'
     body = 'Check the Amazon link ' + url
 
     msg = f"Subject: {subject}\n\n{body}"
 
-    # Enter your email id here
-    emailid = input("Enter your email id here: ")     
     server.sendmail('swa99yapp@gmail.com', emailid, msg)
 
     print('!!Email Sent Successfully!!')
 
-    server.quit() 
+    server.quit()
+    exit()
+
 
 def main():
 
-    # Copy the link of the webpage in these quotes
-    url = ''
+    # Link of the webpage here
+    url = input("Enter the URL here: ")
 
-    # Copy your User Agent in the single quotes below
+    # Enter your User Agent
     # To find your user agent just Google my user agent
-    headers = {
-    "User-Agent": ''}
-    priceChecker(url, headers)
+    usrAgent = input("Enter your user agent: ")
+    headers = {"User-Agent": usrAgent}
+
+    # Your offer price
+    quotedPrice = float(input("Enter Quoted Price: "))
+
+    # Enter your email id here
+    emailid = input("Enter your email id here: ")
+
+    while(True):
+
+        priceChecker(url, headers, quotedPrice, emailid)
+        time.sleep(3600)
 
 
 if __name__ == "__main__":
     main()
-
-
-
